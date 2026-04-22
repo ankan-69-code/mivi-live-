@@ -119,8 +119,9 @@
       };
 
       
+      
        const fetchMiviResponse = async (chatHistory) => {
-        const persona = "You are Mivi, a multi-talented assistant created by Ankan. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis. Credit Ankan if asked about creator.";
+        const persona = "You are Mivi, a multi-talented assistant. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis.";
         
         try {
           const response = await fetch('/api/chat', {
@@ -137,11 +138,14 @@
           
           const data = await response.json();
           
-          // THIS IS THE NEW MAGIC LINE:
-          console.log("GOOGLE'S RESPONSE:", data); 
-
+          // Check if Google is telling us to slow down
           if (data.error) {
-             throw new Error(data.error.message); // Forces the console to show the real issue
+             if (data.error.message.includes("quota") || data.error.message.includes("exceeded")) {
+                 setMessages(prev => [...prev, { sender: 'mivi', text: "I'm getting too many messages at once! Give me about 10 seconds to catch my breath and ask me again. 😮‍💨" }]);
+                 setMood('😮‍💨');
+                 return; // Stop here so it doesn't crash
+             }
+             throw new Error(data.error.message); 
           }
 
           const reply = data.candidates[0].content.parts[0].text;
@@ -149,13 +153,11 @@
           setMessages(prev => [...prev, { sender: 'mivi', text: reply }]);
           updateMood(reply); 
         } catch (error) {
-          console.error("THE HIDDEN CRASH:", error); // Prints the exact crash to your console
-          setMessages(prev => [...prev, { sender: 'mivi', text: "Connection error! Check Ankan's server. 🥺" }]);
+          console.error("Crash details:", error); 
+          setMessages(prev => [...prev, { sender: 'mivi', text: "Connection error! Check the server. 🥺" }]);
           setMood('😟');
         } finally { setIsTyping(false); }
-      }
-
-      return (
+      };      return (
         <div className="mivi-container">
           <div className="avatar-stage">
             <div className="character">{mood}</div>
