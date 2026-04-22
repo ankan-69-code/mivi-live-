@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mivi: Your Love Life Assistant</title>
+  <title>Mivi: Your Life Assistant</title>
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -43,7 +43,7 @@
     const { useState, useRef, useEffect } = React;
     function App() {
       const [messages, setMessages] = useState([
-        { sender: 'mivi', text: "Hi! I'm Mivi, your personal assistant for your love life. I'm here to listen without judgment, so feel free to ask for advice or just vent about whatever you need. ✨" }
+        { sender: 'mivi', text: "Hi! I'm Mivi, your personal assistant. I'm here to help you, so feel free to ask for advice or just vent about whatever you need. ✨" }
       ]);
       const [inputValue, setInputValue] = useState('');
       const [isTyping, setIsTyping] = useState(false);
