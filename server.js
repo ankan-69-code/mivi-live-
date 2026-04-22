@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // This serves your HTML file from the 'public' folder
-app.use(express.static('public')); 
+app.use(express.static(__dirname)); 
 
 app.post('/api/chat', async (req, res) => {
   try {
