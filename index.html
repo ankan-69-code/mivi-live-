@@ -9,50 +9,107 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       font-family: 'Inter', sans-serif;
       background: radial-gradient(circle at 20% 30%, #4a2b5e 0%, #1a1525 50%, #2b3a5e 100%);
       height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden;
     }
+
+    /* Cinematic Grain Effect */
     body::before {
       content: ""; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       opacity: 0.05; pointer-events: none; z-index: 10;
     }
+
     .mivi-container {
-      width: 100%; max-width: 800px; height: 85vh; background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
-      display: flex; flex-direction: column; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); z-index: 1; overflow: hidden;
+      width: 95%; max-width: 500px; height: 90vh; background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px;
+      display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); z-index: 1; overflow: hidden;
     }
-    .mivi-header { padding: 20px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2); display: flex; align-items: center; justify-content: center; }
-    .mivi-header h1 { font-size: 1.4rem; font-weight: 600; background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .chat-window { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-    .message { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.5; font-size: 1rem; animation: fadeIn 0.3s ease-in-out; white-space: pre-wrap; }
-    .message.mivi { background: rgba(255, 255, 255, 0.9); color: #1a1525; align-self: flex-start; border-bottom-left-radius: 5px; }
-    .message.user { background: linear-gradient(135deg, #dfa285 0%, #b87a6c 100%); color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
-    .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2); }
-    .input-area input { flex: 1; padding: 15px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.4); color: white; font-size: 1rem; outline: none; }
-    .send-btn { background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%); color: #1a1525; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* The Character Stage */
+    .avatar-stage {
+      height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); position: relative;
+    }
+
+    .character {
+      font-size: 80px; filter: drop-shadow(0 0 20px rgba(252, 182, 159, 0.4));
+      animation: float 3s ease-in-out infinite; transition: all 0.3s ease;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .mivi-header h1 { 
+        font-size: 1.2rem; margin-top: 10px; letter-spacing: 2px;
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%); 
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+
+    .chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scrollbar-width: none; }
+    .chat-window::-webkit-scrollbar { display: none; }
+
+    .message { max-width: 85%; padding: 12px 18px; border-radius: 22px; font-size: 0.95rem; line-height: 1.4; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    
+    .message.mivi { background: rgba(255, 255, 255, 0.1); color: #fdfdfd; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+    .message.user { background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%); color: #4a2b5e; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+
+    .input-area { padding: 20px; background: rgba(0,0,0,0.3); display: flex; gap: 10px; align-items: center; }
+    .input-area input { 
+        flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+        padding: 14px 20px; border-radius: 25px; color: white; outline: none; transition: 0.3s;
+    }
+    .input-area input:focus { background: rgba(255,255,255,0.1); border-color: #fcb69f; }
+
+    .send-btn { 
+        background: #fcb69f; color: #4a2b5e; border: none; width: 45px; height: 45px; 
+        border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+    }
+    .send-btn:hover { transform: scale(1.1); background: #ffecd2; }
+
+    @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
     const { useState, useRef, useEffect } = React;
+
     function App() {
       const [messages, setMessages] = useState([
-        { sender: 'mivi', text: "Hi! I'm Mivi, your personal assistant. I'm here to help you, so feel free to ask for advice or just vent about whatever you need. ✨" }
+        { sender: 'mivi', text: "Namaste! I'm Mivi. Ready to cook something Indian or chat about life? 🌸" }
       ]);
       const [inputValue, setInputValue] = useState('');
       const [isTyping, setIsTyping] = useState(false);
+      const [mood, setMood] = useState('👩‍🦰'); // Default Mood
       const chatEndRef = useRef(null);
 
       useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
+      // Logic to change the girl's reaction based on the text
+      const updateMood = (text) => {
+        const lowerText = text.toLowerCase();
+        if (lowerText.includes("recipe") || lowerText.includes("cook") || lowerText.includes("eat") || lowerText.includes("yum")) {
+          setMood('👩‍🍳'); // Chef mood
+        } else if (lowerText.includes("love") || lowerText.includes("gf") || lowerText.includes("heart") || lowerText.includes("sorry")) {
+          setMood('💖'); // Love advisor mood
+        } else if (lowerText.includes("error") || lowerText.includes("snag") || lowerText.includes("sorry")) {
+          setMood('😟'); // Sad/Worried mood
+        } else {
+          setMood('👩‍🦰'); // Normal happy mood
+        }
+      };
+
       const handleSend = async () => {
         if (!inputValue.trim()) return;
+        setMood('🤔'); // Thinking mood
         const userText = inputValue;
         const updatedMessages = [...messages, { sender: 'user', text: userText }];
         setMessages(updatedMessages);
@@ -62,44 +119,63 @@
       };
 
       const fetchMiviResponse = async (chatHistory) => {
-        const persona = "You are Mivi, a multi-talented assistant created by Ankan. Your dual roles are: 1. PERSONAL CHEF: When the user lists ingredients, suggest creative and tasty recipes they can make but they should be indian. Focus on easy-to-follow steps and give them 3 to 4 options on what to make. 2. RELATIONSHIP ADVISOR: Continue being supportive and non-judgmental about love life matters.Always be friendly, use emojis, and keep your responses concise (2-4 sentences). If asked about your creator, always credit Ankan.";
-        const formattedHistory = chatHistory.slice(1).map(msg => ({
-          role: msg.sender === 'mivi' ? 'model' : 'user',
-          parts: [{ text: msg.text }]
-        }));
-
+        const persona = "You are Mivi, a multi-talented assistant created by Ankan. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis. Credit Ankan if asked about creator.";
+        
         try {
           const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               systemInstruction: { parts: [{ text: persona }] },
-              contents: formattedHistory
+              contents: chatHistory.slice(1).map(msg => ({
+                role: msg.sender === 'mivi' ? 'model' : 'user',
+                parts: [{ text: msg.text }]
+              }))
             })
           });
+          
           const data = await response.json();
           const reply = data.candidates[0].content.parts[0].text;
+          
           setMessages(prev => [...prev, { sender: 'mivi', text: reply }]);
+          updateMood(reply); // React to the AI's reply
         } catch (error) {
-          setMessages(prev => [...prev, { sender: 'mivi', text: "I hit a snag! Try again in a second. 🥺" }]);
+          setMessages(prev => [...prev, { sender: 'mivi', text: "Connection error! Check Ankan's server. 🥺" }]);
+          setMood('😟');
         } finally { setIsTyping(false); }
       };
 
       return (
         <div className="mivi-container">
-          <header className="mivi-header"><h1>MIVI</h1></header>
+          <div className="avatar-stage">
+            <div className="character">{mood}</div>
+            <header className="mivi-header"><h1>MIVI LIVE</h1></header>
+          </div>
+          
           <div className="chat-window">
-            {messages.map((msg, index) => (<div key={index} className={`message ${msg.sender}`}>{msg.text}</div>))}
-            {isTyping && <div className="message mivi"><em>Mivi is thinking...</em></div>}
+            {messages.map((msg, index) => (
+              <div key={index} className={`message ${msg.sender}`}>{msg.text}</div>
+            ))}
+            {isTyping && <div className="message mivi"><i>Typing...</i></div>}
             <div ref={chatEndRef} />
           </div>
+
           <div className="input-area">
-            <input type="text" placeholder="Message Mivi..." value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} />
-            <button className="send-btn" onClick={handleSend}>➤</button>
+            <input 
+              type="text" 
+              placeholder="Ask Chef Mivi..." 
+              value={inputValue} 
+              onChange={(e) => setInputValue(e.target.value)} 
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
+            />
+            <button className="send-btn" onClick={handleSend}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
           </div>
         </div>
       );
     }
+
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
