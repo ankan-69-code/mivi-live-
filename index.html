@@ -118,7 +118,8 @@
         await fetchMiviResponse(updatedMessages);
       };
 
-      const fetchMiviResponse = async (chatHistory) => {
+      
+       const fetchMiviResponse = async (chatHistory) => {
         const persona = "You are Mivi, a multi-talented assistant created by Ankan. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis. Credit Ankan if asked about creator.";
         
         try {
@@ -135,15 +136,24 @@
           });
           
           const data = await response.json();
+          
+          // THIS IS THE NEW MAGIC LINE:
+          console.log("GOOGLE'S RESPONSE:", data); 
+
+          if (data.error) {
+             throw new Error(data.error.message); // Forces the console to show the real issue
+          }
+
           const reply = data.candidates[0].content.parts[0].text;
           
           setMessages(prev => [...prev, { sender: 'mivi', text: reply }]);
-          updateMood(reply); // React to the AI's reply
+          updateMood(reply); 
         } catch (error) {
+          console.error("THE HIDDEN CRASH:", error); // Prints the exact crash to your console
           setMessages(prev => [...prev, { sender: 'mivi', text: "Connection error! Check Ankan's server. 🥺" }]);
           setMood('😟');
         } finally { setIsTyping(false); }
-      };
+      }
 
       return (
         <div className="mivi-container">
