@@ -84,7 +84,7 @@
 
     function App() {
       const [messages, setMessages] = useState([
-        { sender: 'mivi', text: "Namaste! I'm Mivi. Ready to cook something Indian or chat about life? 🌸" }
+        { sender: 'mivi', text: "Hi! I'm Mivi. Ready to cook something Indian or chat about life? 🌸" }
       ]);
       const [inputValue, setInputValue] = useState('');
       const [isTyping, setIsTyping] = useState(false);
@@ -121,7 +121,7 @@
       
       
        const fetchMiviResponse = async (chatHistory) => {
-        const persona = "You are Mivi, a multi-talented assistant. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis.";
+        const persona = "You are Mivi, a multi-talented assistant. Roles: 1. INDIAN CHEF: Suggest 3-4 creative Indian recipes for ingredients listed. 2. RELATIONSHIP ADVISOR: Supportive and friendly. Stay concise (2-4 sentences). Use emojis. DO NOT GO OVERBOARD STICK TO WHAT THE USER HAS ASKED";
         
         try {
           const response = await fetch('/api/chat', {
